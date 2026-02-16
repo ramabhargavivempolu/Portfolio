@@ -34,6 +34,7 @@
                     animation: {
                         'blob': 'blob 7s infinite',
                         'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         blob: {
@@ -45,6 +46,10 @@
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { opacity: 1, boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)' },
+                            '50%': { opacity: .8, boxShadow: '0 0 10px rgba(14, 165, 233, 0.2)' },
                         }
                     }
                 }
@@ -58,6 +63,40 @@
             background-color: #020617;
             color: #f8fafc;
             overflow-x: hidden;
+            cursor: default; /* Keep default cursor, use follower for effect */
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(to right, #0ea5e9, #6366f1);
+            z-index: 100;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Custom Cursor Glow */
+        #cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+            transition: transform 0.1s ease;
+            display: none; /* Hidden on mobile */
+        }
+
+        @media (min-width: 1024px) {
+            #cursor-glow {
+                display: block;
+            }
         }
 
         /* Glassmorphism */
@@ -68,17 +107,30 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
+        /* 3D Tilt Card Base Styles */
         .glass-card {
             background: linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease; /* Fast transform for tilt */
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
         .glass-card:hover {
-            transform: translateY(-5px);
-            border-color: #0ea5e9;
-            box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.3);
+            border-color: rgba(14, 165, 233, 0.5);
+            box-shadow: 0 0 30px -5px rgba(14, 165, 233, 0.2);
+        }
+
+        /* Inner content lift on hover for 3D effect */
+        .glass-card > * {
+            transform: translateZ(20px); /* Lifts content off card */
+            pointer-events: none; /* Allows click through to card if needed, but usually safe to remove if interactive elements inside */
+        }
+        
+        .glass-card a, .glass-card button {
+            pointer-events: auto; /* Re-enable pointer events for links/buttons inside cards */
+            transform: translateZ(30px);
         }
 
         /* Scrollbar */
@@ -117,11 +169,35 @@
 
         /* Gradient Text */
         .text-gradient {
-            background: linear-gradient(to right, #38bdf8, #818cf8);
+            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+            background-size: 200% auto;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             color: transparent;
+            animation: gradient-flow 5s linear infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Typing Cursor */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background-color: #0ea5e9;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         /* Hero Canvas */
@@ -149,23 +225,29 @@
 </head>
 <body class="antialiased selection:bg-primary selection:text-white">
 
+    <!-- Scroll Progress -->
+    <div id="scroll-progress"></div>
+    
+    <!-- Cursor Glow -->
+    <div id="cursor-glow"></div>
+
     <!-- Navigation -->
     <nav class="fixed w-full z-50 glass border-b border-white/5 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <span class="text-2xl font-bold font-mono text-white tracking-tighter">
-                        RV<span class="text-primary">.</span>
+                <div class="flex-shrink-0 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                    <span class="text-2xl font-bold font-mono text-white tracking-tighter group-hover:text-primary transition-colors duration-300">
+                        RV<span class="text-primary group-hover:text-white transition-colors duration-300">.</span>
                     </span>
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#home" class="hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="#about" class="hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">About</a>
-                        <a href="#experience" class="hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Experience</a>
-                        <a href="#skills" class="hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Skills</a>
-                        <a href="#projects" class="hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Projects</a>
-                        <a href="#contact" class="px-5 py-2 rounded-full bg-primary hover:bg-sky-600 text-white transition-all text-sm font-medium shadow-lg shadow-primary/25">Contact Me</a>
+                        <a href="#home" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#about" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">About</a>
+                        <a href="#experience" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Experience</a>
+                        <a href="#skills" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Skills</a>
+                        <a href="#projects" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Projects</a>
+                        <a href="#contact" class="px-5 py-2 rounded-full bg-primary hover:bg-sky-600 text-white transition-all text-sm font-medium shadow-lg shadow-primary/25 hover:shadow-primary/50 hover:-translate-y-0.5 transform">Contact Me</a>
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden">
@@ -200,12 +282,14 @@
         <div class="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-            <div class="inline-block px-4 py-1.5 mb-6 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-300 text-sm font-mono animate-float">
-                <i class="fas fa-terminal mr-2"></i> Senior Data Engineer
+            <!-- Animated Badge -->
+            <div class="inline-block px-4 py-1.5 mb-6 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-300 text-sm font-mono animate-float shadow-[0_0_15px_rgba(14,165,233,0.3)]">
+                <i class="fas fa-terminal mr-2"></i> 
+                <span id="typewriter-text"></span><span class="typing-cursor"></span>
             </div>
             
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-                Hello, I'm <span class="text-gradient">Rama Bhargavi</span>
+            <h1 class="text-5xl md:text-8xl font-bold tracking-tight mb-6">
+                Hello, I'm <br class="md:hidden" /> <span class="text-gradient">Rama Bhargavi</span>
             </h1>
             
             <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400 leading-relaxed">
@@ -213,24 +297,24 @@
             </p>
             
             <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#contact" class="px-8 py-3.5 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-sky-500/30 transition-all transform hover:-translate-y-1">
+                <a href="#contact" class="px-8 py-3.5 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-sky-500/30 transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95">
                     Get in Touch
                 </a>
-                <a href="#experience" class="px-8 py-3.5 rounded-lg glass hover:bg-white/5 text-white font-semibold border border-white/10 transition-all">
+                <a href="#experience" class="px-8 py-3.5 rounded-lg glass hover:bg-white/10 text-white font-semibold border border-white/10 transition-all hover:-translate-y-1">
                     View Experience
                 </a>
             </div>
 
             <!-- Tech Stack Ticker -->
             <div class="mt-20 pt-8 border-t border-white/5">
-                <p class="text-sm text-gray-500 mb-4 font-mono uppercase tracking-widest">Powering Solutions With</p>
-                <div class="flex justify-center flex-wrap gap-8 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
-                    <i class="fab fa-aws text-3xl hover:text-[#FF9900]" title="AWS"></i>
-                    <i class="fab fa-microsoft text-3xl hover:text-[#00A4EF]" title="Azure"></i>
-                    <i class="fab fa-google text-3xl hover:text-[#4285F4]" title="GCP"></i>
-                    <i class="fab fa-python text-3xl hover:text-[#3776AB]" title="Python"></i>
-                    <i class="fas fa-database text-3xl hover:text-[#336791]" title="SQL"></i>
-                    <i class="fas fa-snowflake text-3xl hover:text-[#29B5E8]" title="Snowflake"></i>
+                <p class="text-sm text-gray-500 mb-6 font-mono uppercase tracking-widest">Powering Solutions With</p>
+                <div class="flex justify-center flex-wrap gap-10 opacity-70">
+                    <i class="fab fa-aws text-4xl hover:text-[#FF9900] hover:scale-110 transition-all duration-300 cursor-pointer" title="AWS"></i>
+                    <i class="fab fa-microsoft text-4xl hover:text-[#00A4EF] hover:scale-110 transition-all duration-300 cursor-pointer" title="Azure"></i>
+                    <i class="fab fa-google text-4xl hover:text-[#4285F4] hover:scale-110 transition-all duration-300 cursor-pointer" title="GCP"></i>
+                    <i class="fab fa-python text-4xl hover:text-[#3776AB] hover:scale-110 transition-all duration-300 cursor-pointer" title="Python"></i>
+                    <i class="fas fa-database text-4xl hover:text-[#336791] hover:scale-110 transition-all duration-300 cursor-pointer" title="SQL"></i>
+                    <i class="fas fa-snowflake text-4xl hover:text-[#29B5E8] hover:scale-110 transition-all duration-300 cursor-pointer" title="Snowflake"></i>
                 </div>
             </div>
         </div>
@@ -240,23 +324,23 @@
     <section id="about" class="py-24 bg-darker relative section-reveal">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="relative">
-                    <div class="absolute inset-0 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-2xl blur-lg opacity-30 transform -rotate-3"></div>
+                <div class="relative group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-2xl blur-xl opacity-30 transform -rotate-3 group-hover:opacity-50 transition-opacity duration-500"></div>
                     <div class="relative glass-card rounded-2xl p-8 border border-white/10">
                         <h3 class="text-2xl font-bold mb-4 text-white">Professional Summary</h3>
                         <div class="space-y-4 text-gray-400">
                             <p>
-                                Data Engineer with <strong>5+ years of experience</strong> across business consulting, insurance, and financial services domains. I specialize in building and optimizing scalable data pipelines using SQL, Python, and cloud platforms.
+                                Data Engineer with <strong class="text-white">5+ years of experience</strong> across business consulting, insurance, and financial services domains. I specialize in building and optimizing scalable data pipelines using SQL, Python, and cloud platforms.
                             </p>
                             <p>
-                                My expertise lies in the <strong>Medallion Architecture</strong>, Data Warehousing, and automating ETL processes to drive business intelligence. I am also a skilled orator with project management experience, bridging the gap between technical data solutions and business goals.
+                                My expertise lies in the <strong class="text-white">Medallion Architecture</strong>, Data Warehousing, and automating ETL processes to drive business intelligence. I am also a skilled orator with project management experience, bridging the gap between technical data solutions and business goals.
                             </p>
                             <div class="grid grid-cols-2 gap-4 mt-6">
-                                <div class="p-4 rounded-lg bg-white/5 border border-white/5">
+                                <div class="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/50 transition-colors">
                                     <div class="text-3xl font-bold text-primary mb-1">5+</div>
                                     <div class="text-sm text-gray-500">Years Experience</div>
                                 </div>
-                                <div class="p-4 rounded-lg bg-white/5 border border-white/5">
+                                <div class="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-secondary/50 transition-colors">
                                     <div class="text-3xl font-bold text-secondary mb-1">MS</div>
                                     <div class="text-sm text-gray-500">Computer Science</div>
                                 </div>
@@ -271,7 +355,7 @@
                     </h2>
                     
                     <!-- Education Cards -->
-                    <div class="glass-card p-6 rounded-xl flex items-start space-x-4">
+                    <div class="glass-card p-6 rounded-xl flex items-start space-x-4 hover:border-sky-500/50">
                         <div class="p-3 rounded-lg bg-sky-500/20 text-sky-400">
                             <i class="fas fa-graduation-cap text-xl"></i>
                         </div>
@@ -282,7 +366,7 @@
                         </div>
                     </div>
 
-                    <div class="glass-card p-6 rounded-xl flex items-start space-x-4">
+                    <div class="glass-card p-6 rounded-xl flex items-start space-x-4 hover:border-indigo-500/50">
                         <div class="p-3 rounded-lg bg-indigo-500/20 text-indigo-400">
                             <i class="fas fa-university text-xl"></i>
                         </div>
@@ -295,10 +379,10 @@
 
                     <!-- Certifications Summary -->
                     <div class="flex flex-wrap gap-3 mt-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-sky-500/30 text-sky-300 bg-sky-500/10">AWS Certified</span>
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-blue-500/30 text-blue-300 bg-blue-500/10">Azure Data Fundamentals</span>
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-orange-500/30 text-orange-300 bg-orange-500/10">Databricks Lakehouse</span>
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-teal-500/30 text-teal-300 bg-teal-500/10">Snowflake Advanced</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-sky-500/30 text-sky-300 bg-sky-500/10 cursor-default hover:bg-sky-500/20 transition-colors">AWS Certified</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-blue-500/30 text-blue-300 bg-blue-500/10 cursor-default hover:bg-blue-500/20 transition-colors">Azure Data Fundamentals</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-orange-500/30 text-orange-300 bg-orange-500/10 cursor-default hover:bg-orange-500/20 transition-colors">Databricks Lakehouse</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-teal-500/30 text-teal-300 bg-teal-500/10 cursor-default hover:bg-teal-500/20 transition-colors">Snowflake Advanced</span>
                     </div>
                 </div>
             </div>
@@ -316,12 +400,12 @@
             <div class="relative timeline-line">
                 <!-- Job 1 -->
                 <div class="relative z-10 mb-12 md:w-1/2 md:ml-auto md:pl-10 pl-12 group">
-                    <div class="absolute left-0 md:-left-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-primary shadow-[0_0_15px_rgba(14,165,233,0.5)] transform translate-y-2"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden group-hover:border-primary/50 transition-all">
+                    <div class="absolute left-0 md:-left-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-primary shadow-[0_0_15px_rgba(14,165,233,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
+                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <i class="fas fa-building text-6xl"></i>
                         </div>
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-primary/20 text-primary mb-3">April 2025 - Present</span>
+                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-primary/20 text-primary mb-3 font-mono">April 2025 - Present</span>
                         <h3 class="text-xl font-bold text-white">Senior Data Engineer</h3>
                         <h4 class="text-lg text-gray-300 mb-2">Cenlar | Yardley, PA</h4>
                         <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside">
@@ -335,12 +419,12 @@
 
                 <!-- Job 2 -->
                 <div class="relative z-10 mb-12 md:w-1/2 md:mr-auto md:pr-10 md:text-right pl-12 md:pl-0 group">
-                    <div class="absolute left-0 md:left-auto md:-right-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-secondary shadow-[0_0_15px_rgba(99,102,241,0.5)] transform translate-y-2"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden group-hover:border-secondary/50 transition-all">
+                    <div class="absolute left-0 md:left-auto md:-right-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-secondary shadow-[0_0_15px_rgba(99,102,241,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
+                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
                         <div class="absolute top-0 left-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform -scale-x-100">
                             <i class="fas fa-car text-6xl"></i>
                         </div>
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-secondary/20 text-secondary mb-3">May 2024 - April 2025</span>
+                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-secondary/20 text-secondary mb-3 font-mono">May 2024 - April 2025</span>
                         <h3 class="text-xl font-bold text-white">Data Engineer</h3>
                         <h4 class="text-lg text-gray-300 mb-2">American Family Insurance | New York, NY</h4>
                         <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside inline-block text-left md:text-right">
@@ -354,9 +438,9 @@
 
                 <!-- Job 3 -->
                 <div class="relative z-10 mb-12 md:w-1/2 md:ml-auto md:pl-10 pl-12 group">
-                    <div class="absolute left-0 md:-left-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-indigo-400 shadow-[0_0_15px_rgba(129,140,248,0.5)] transform translate-y-2"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden group-hover:border-indigo-400/50 transition-all">
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-indigo-400/20 text-indigo-300 mb-3">Aug 2021 - Jul 2022</span>
+                    <div class="absolute left-0 md:-left-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-indigo-400 shadow-[0_0_15px_rgba(129,140,248,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
+                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-indigo-400/20 text-indigo-300 mb-3 font-mono">Aug 2021 - Jul 2022</span>
                         <h3 class="text-xl font-bold text-white">Programmer Analyst</h3>
                         <h4 class="text-lg text-gray-300 mb-2">Cognizant | Pune, MH</h4>
                         <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside">
@@ -370,9 +454,9 @@
 
                 <!-- Job 4 -->
                 <div class="relative z-10 mb-12 md:w-1/2 md:mr-auto md:pr-10 md:text-right pl-12 md:pl-0 group">
-                    <div class="absolute left-0 md:left-auto md:-right-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-sky-600 shadow-[0_0_15px_rgba(2,132,199,0.5)] transform translate-y-2"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden group-hover:border-sky-600/50 transition-all">
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-sky-600/20 text-sky-400 mb-3">Jul 2019 - Apr 2021</span>
+                    <div class="absolute left-0 md:left-auto md:-right-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-sky-600 shadow-[0_0_15px_rgba(2,132,199,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
+                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-sky-600/20 text-sky-400 mb-3 font-mono">Jul 2019 - Apr 2021</span>
                         <h3 class="text-xl font-bold text-white">Data Engineer</h3>
                         <h4 class="text-lg text-gray-300 mb-2">Remote | India</h4>
                         <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside inline-block text-left md:text-right">
@@ -397,8 +481,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Skill Group 1 -->
-                <div class="glass-card p-6 rounded-xl">
-                    <div class="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center text-sky-400 text-2xl mb-4">
+                <div class="glass-card p-6 rounded-xl hover:border-sky-500/50">
+                    <div class="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center text-sky-400 text-2xl mb-4 shadow-[0_0_10px_rgba(14,165,233,0.3)]">
                         <i class="fas fa-cloud"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-4">Cloud Services</h3>
@@ -412,8 +496,8 @@
                 </div>
 
                 <!-- Skill Group 2 -->
-                <div class="glass-card p-6 rounded-xl">
-                    <div class="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center text-indigo-400 text-2xl mb-4">
+                <div class="glass-card p-6 rounded-xl hover:border-indigo-500/50">
+                    <div class="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center text-indigo-400 text-2xl mb-4 shadow-[0_0_10px_rgba(99,102,241,0.3)]">
                         <i class="fas fa-code"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-4">Languages & DB</h3>
@@ -427,8 +511,8 @@
                 </div>
 
                 <!-- Skill Group 3 -->
-                <div class="glass-card p-6 rounded-xl">
-                    <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-2xl mb-4">
+                <div class="glass-card p-6 rounded-xl hover:border-purple-500/50">
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-2xl mb-4 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
                         <i class="fas fa-cogs"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-4">Tools & ETL</h3>
@@ -442,8 +526,8 @@
                 </div>
 
                 <!-- Skill Group 4 -->
-                <div class="glass-card p-6 rounded-xl">
-                    <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center text-pink-400 text-2xl mb-4">
+                <div class="glass-card p-6 rounded-xl hover:border-pink-500/50">
+                    <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center text-pink-400 text-2xl mb-4 shadow-[0_0_10px_rgba(236,72,153,0.3)]">
                         <i class="fas fa-chart-pie"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white mb-4">Visualization</h3>
@@ -468,9 +552,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Project 1 -->
-                <div class="glass-card rounded-xl overflow-hidden group">
-                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                        <i class="fas fa-network-wired text-6xl text-gray-700 group-hover:text-primary transition-colors"></i>
+                <div class="glass-card rounded-xl overflow-hidden group hover:border-primary/50">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <i class="fas fa-network-wired text-6xl text-gray-700 group-hover:text-primary transition-colors z-10"></i>
                     </div>
                     <div class="p-8">
                         <h3 class="text-2xl font-bold text-white mb-3">Azure End-to-End Pipeline</h3>
@@ -479,31 +564,32 @@
                             Enabled real-time insights into customer demographics and sales trends with a dynamic Power BI dashboard.
                         </p>
                         <div class="flex gap-2 mb-6">
-                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary">Azure Data Factory</span>
-                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary">RBAC</span>
-                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary">Key Vault</span>
+                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary border border-primary/20">Azure Data Factory</span>
+                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary border border-primary/20">RBAC</span>
+                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary border border-primary/20">Key Vault</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Project 2 (Publication) -->
-                <div class="glass-card rounded-xl overflow-hidden group">
-                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                        <i class="fas fa-book-journal-whills text-6xl text-gray-700 group-hover:text-secondary transition-colors"></i>
+                <div class="glass-card rounded-xl overflow-hidden group hover:border-secondary/50">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <i class="fas fa-book-journal-whills text-6xl text-gray-700 group-hover:text-secondary transition-colors z-10"></i>
                     </div>
                     <div class="p-8">
                         <div class="flex justify-between items-start">
                             <h3 class="text-2xl font-bold text-white mb-3">Publication: Planetary Dynamics</h3>
-                            <span class="bg-secondary/20 text-secondary text-xs px-2 py-1 rounded">Research</span>
+                            <span class="bg-secondary/20 text-secondary text-xs px-2 py-1 rounded border border-secondary/20">Research</span>
                         </div>
                         <p class="text-gray-400 mb-4 text-sm">
                             "A Planet Crossing the Fragment Chain of a Large Comet." Published in Earth & Environmental Science Research & Reviews.
                              utilized Power BI, SQL, and Python to analyze planetary interactions and impact probabilities.
                         </p>
                         <div class="flex gap-2 mb-6">
-                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary">Python</span>
-                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary">Matplotlib</span>
-                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary">GSM Model</span>
+                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary border border-secondary/20">Python</span>
+                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary border border-secondary/20">Matplotlib</span>
+                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary border border-secondary/20">GSM Model</span>
                         </div>
                     </div>
                 </div>
@@ -516,19 +602,19 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h3 class="text-xl text-center text-gray-400 mb-8 uppercase tracking-widest font-mono">Certified Professional</h3>
             <div class="flex flex-wrap justify-center gap-6">
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-primary/50 transition-colors">
+                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-primary/50 transition-all hover:-translate-y-1">
                     <i class="fab fa-aws text-orange-400 text-2xl"></i>
                     <span class="text-sm font-medium">Cloud Practitioner</span>
                 </div>
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-blue-500/50 transition-colors">
+                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-blue-500/50 transition-all hover:-translate-y-1">
                     <i class="fab fa-microsoft text-blue-400 text-2xl"></i>
                     <span class="text-sm font-medium">Azure Data Fundamentals</span>
                 </div>
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-green-500/50 transition-colors">
+                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-green-500/50 transition-all hover:-translate-y-1">
                     <i class="fab fa-microsoft text-green-400 text-2xl"></i>
                     <span class="text-sm font-medium">Fabric Analytics Engineer</span>
                 </div>
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-red-500/50 transition-colors">
+                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-red-500/50 transition-all hover:-translate-y-1">
                     <i class="fas fa-database text-red-400 text-2xl"></i>
                     <span class="text-sm font-medium">Oracle AI Foundations</span>
                 </div>
@@ -546,33 +632,33 @@
             </p>
             
             <div class="flex flex-col md:flex-row justify-center gap-6 mb-12">
-                <a href="mailto:ramabhargavi0@gmail.com" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left">
+                <a href="mailto:ramabhargavi0@gmail.com" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left transition-all hover:-translate-y-1 hover:border-primary/50">
                     <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                         <i class="fas fa-envelope"></i>
                     </div>
                     <div>
                         <p class="text-sm text-gray-400">Email Me</p>
-                        <p class="text-lg font-bold text-white">bhargavivvs5@gmail.com</p>
+                        <p class="text-lg font-bold text-white group-hover:text-primary transition-colors">bhargavivvs5@gmail.com</p>
                     </div>
                 </a>
                 
-                <a href="tel:+15738013196" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left">
+                <a href="tel:+15738013196" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left transition-all hover:-translate-y-1 hover:border-secondary/50">
                     <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
                         <i class="fas fa-phone"></i>
                     </div>
                     <div>
                         <p class="text-sm text-gray-400">Call Me</p>
-                        <p class="text-lg font-bold text-white">(609)-850-8042</p>
+                        <p class="text-lg font-bold text-white group-hover:text-secondary transition-colors">(609)-850-8042</p>
                     </div>
                 </a>
 
-                <a href="https://www.linkedin.com/in/ramab1520" target="_blank" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left">
+                <a href="https://www.linkedin.com/in/ramab1520" target="_blank" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left transition-all hover:-translate-y-1 hover:border-blue-500/50">
                     <div class="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
                         <i class="fab fa-linkedin-in"></i>
                     </div>
                     <div>
                         <p class="text-sm text-gray-400">Connect</p>
-                        <p class="text-lg font-bold text-white">linkedin.com/in/ramab1520</p>
+                        <p class="text-lg font-bold text-white group-hover:text-blue-500 transition-colors">linkedin.com/in/ramab1520</p>
                     </div>
                 </a>
             </div>
@@ -658,12 +744,97 @@
             requestAnimationFrame(animateParticles);
         }
 
-        window.addEventListener('resize', () => {
-            resize();
-            initParticles();
+        // 2. Typing Effect
+        const typingTextElement = document.getElementById('typewriter-text');
+        const roles = ["Senior Data Engineer", "Azure Architect", "ETL Specialist", "Cloud Developer"];
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typingDelay = 100;
+        let erasingDelay = 50;
+        let newTextDelay = 2000;
+
+        function type() {
+            const currentRole = roles[roleIndex];
+            
+            if (isDeleting) {
+                typingTextElement.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+                typingDelay = erasingDelay;
+            } else {
+                typingTextElement.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+                typingDelay = 100;
+            }
+
+            if (!isDeleting && charIndex === currentRole.length) {
+                isDeleting = true;
+                typingDelay = newTextDelay;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex++;
+                if (roleIndex >= roles.length) roleIndex = 0;
+            }
+
+            setTimeout(type, typingDelay);
+        }
+
+        // 3. 3D Tilt Effect
+        function initTilt() {
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    // Max rotation in degrees
+                    const maxRotation = 10; 
+                    
+                    const rotateX = ((y - centerY) / centerY) * -maxRotation; 
+                    const rotateY = ((x - centerX) / centerX) * maxRotation;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                });
+            });
+        }
+
+        // 4. Custom Cursor Follower
+        const cursorGlow = document.getElementById('cursor-glow');
+        if (cursorGlow) {
+            document.addEventListener('mousemove', (e) => {
+                // Use transform for better performance than top/left
+                cursorGlow.style.left = e.clientX + 'px';
+                cursorGlow.style.top = e.clientY + 'px';
+            });
+        }
+
+        // 5. Scroll Progress
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+
+            // Navbar Effect
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+                navbar.classList.replace('border-white/5', 'border-gray-800');
+                navbar.style.background = 'rgba(15, 23, 42, 0.9)';
+            } else {
+                navbar.classList.remove('shadow-lg');
+                navbar.classList.replace('border-gray-800', 'border-white/5');
+                navbar.style.background = 'rgba(30, 41, 59, 0.4)';
+            }
         });
 
-        // 2. Scroll Reveal Animation
+        // 6. Section Reveal
         const observerOptions = {
             threshold: 0.1
         };
@@ -680,24 +851,19 @@
             observer.observe(section);
         });
 
-        // 3. Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('shadow-lg');
-                navbar.classList.replace('border-white/5', 'border-gray-800');
-                navbar.style.background = 'rgba(15, 23, 42, 0.9)';
-            } else {
-                navbar.classList.remove('shadow-lg');
-                navbar.classList.replace('border-gray-800', 'border-white/5');
-                navbar.style.background = 'rgba(30, 41, 59, 0.4)';
-            }
+        // Initialize All
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
         });
 
-        // Initialize
-        resize();
-        initParticles();
-        animateParticles();
+        document.addEventListener('DOMContentLoaded', () => {
+            resize();
+            initParticles();
+            animateParticles();
+            setTimeout(type, 1000); // Start typing after load
+            initTilt();
+        });
 
     </script>
 </body>
