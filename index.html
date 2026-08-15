@@ -1,870 +1,794 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rama Bhargavi Vempolu | Senior Data Engineer</title>
-    <meta name="description" content="Portfolio of Rama Bhargavi Vempolu, a Senior Data Engineer specializing in Azure, Databricks, and Scalable ETL Pipelines.">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rama Bhargavi Vempolu — Senior Data Engineer</title>
+<meta name="description" content="Senior Data Engineer building governed lakehouse platforms on Databricks, Snowflake, Azure and AWS. Five years across financial services, insurance and consulting.">
+<meta property="og:title" content="Rama Bhargavi Vempolu — Senior Data Engineer">
+<meta property="og:description" content="I build the data platforms that let analytics and ML teams move fast without breaking things.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root[data-theme="dark"]{
+  --bg:#0A0E13; --surface:#11161D; --surface-2:#171E27; --surface-3:#1E2733;
+  --border:#232E3B; --border-strong:#33414F;
+  --ink:#E9EFF5; --ink-2:#A3B3C2; --ink-3:#6C7D8E;
+  --accent:#4DD4C4; --accent-ink:#0A0E13; --accent-dim:#2A8F86;
+  --bronze:#D08A4B; --silver:#AFC0CE; --gold:#E8BC4A;
+  --glow:rgba(77,212,196,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.32);
+}
+:root[data-theme="light"]{
+  --bg:#FBFCFD; --surface:#FFFFFF; --surface-2:#F3F6F9; --surface-3:#E9EEF3;
+  --border:#DEE5EC; --border-strong:#C3CFDA;
+  --ink:#0F1922; --ink-2:#48596A; --ink-3:#76889A;
+  --accent:#0E7C74; --accent-ink:#FFFFFF; --accent-dim:#0E7C74;
+  --bronze:#A2622C; --silver:#5C7186; --gold:#8A6410;
+  --glow:rgba(14,124,116,.10);
+  --shadow:0 1px 2px rgba(15,25,34,.06), 0 8px 26px rgba(15,25,34,.07);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  transition:background .3s ease,color .3s ease;overflow-x:hidden;
+}
+.mono{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace}
+h1,h2,h3,h4{line-height:1.2;margin:0;letter-spacing:-.02em;font-weight:600}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1120px,92vw);margin:0 auto}
+::selection{background:var(--accent);color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 
-    <!-- Custom Config -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        mono: ['Space Grotesk', 'monospace'],
-                    },
-                    colors: {
-                        primary: '#0ea5e9',   /* Sky 500 */
-                        secondary: '#6366f1', /* Indigo 500 */
-                        dark: '#0f172a',      /* Slate 900 */
-                        darker: '#020617',    /* Slate 950 */
-                        card: 'rgba(30, 41, 59, 0.7)',
-                    },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        'pulse-glow': {
-                            '0%, 100%': { opacity: 1, boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)' },
-                            '50%': { opacity: .8, boxShadow: '0 0 10px rgba(14, 165, 233, 0.2)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;transition:border-color .25s,background .25s;
+}
+.nav.scrolled{border-bottom-color:var(--border)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:-.01em}
+.brand-mark{
+  width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--accent),var(--accent-dim));
+  color:var(--accent-ink);font-size:13px;font-weight:700;flex-shrink:0;
+}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{
+  padding:7px 13px;border-radius:7px;font-size:14px;color:var(--ink-2);
+  transition:color .18s,background .18s;position:relative;
+}
+.nav-links a:hover{color:var(--ink);background:var(--surface-2)}
+.nav-links a.active{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:36px;height:36px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);color:var(--ink-2);display:grid;place-items:center;
+  cursor:pointer;transition:.18s;padding:0;
+}
+.icon-btn:hover{color:var(--accent);border-color:var(--border-strong);background:var(--surface-2)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:9px;
+  font-size:14px;font-weight:600;cursor:pointer;transition:.2s;border:1px solid transparent;
+  font-family:inherit;white-space:nowrap;
+}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--glow)}
+.btn-ghost{border-color:var(--border);color:var(--ink);background:var(--surface)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.nav-toggle{display:none}
 
-    <style>
-        /* Custom Styles */
-        body {
-            background-color: #020617;
-            color: #f8fafc;
-            overflow-x: hidden;
-            cursor: default; /* Keep default cursor, use follower for effect */
-        }
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{position:relative;padding:150px 0 90px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:56px 56px;opacity:.4;
+  mask-image:radial-gradient(ellipse 78% 62% at 50% 0%,#000 20%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 78% 62% at 50% 0%,#000 20%,transparent 78%);
+}
+.hero-orb{
+  position:absolute;top:-180px;left:50%;transform:translateX(-50%);
+  width:820px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,var(--glow),transparent 68%);filter:blur(50px);
+}
+.hero-in{position:relative;z-index:1;max-width:820px}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:5px 13px;border-radius:99px;
+  border:1px solid var(--border);background:var(--surface);font-size:13px;color:var(--ink-2);
+  margin-bottom:26px;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent);position:relative;flex-shrink:0}
+.dot::after{
+  content:'';position:absolute;inset:-3px;border-radius:50%;
+  background:var(--accent);opacity:.35;animation:pulse 2.2s ease-out infinite;
+}
+@keyframes pulse{0%{transform:scale(.7);opacity:.5}70%{transform:scale(2);opacity:0}100%{opacity:0}}
+.hero h1{font-size:clamp(2.5rem,6.2vw,4.2rem);font-weight:700;letter-spacing:-.035em;margin-bottom:8px}
+.hero-role{
+  font-size:clamp(1rem,2.2vw,1.2rem);color:var(--accent);font-weight:500;
+  margin-bottom:24px;letter-spacing:-.01em;
+}
+.hero-pitch{font-size:clamp(1.02rem,2vw,1.16rem);color:var(--ink-2);max-width:660px;margin-bottom:36px}
+.hero-pitch strong{color:var(--ink);font-weight:600}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.hero-meta{
+  display:flex;gap:22px;flex-wrap:wrap;margin-top:38px;padding-top:26px;
+  border-top:1px solid var(--border);font-size:13.5px;color:var(--ink-3);
+}
+.hero-meta span{display:flex;align-items:center;gap:7px}
 
-        /* Scroll Progress Bar */
-        #scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: linear-gradient(to right, #0ea5e9, #6366f1);
-            z-index: 100;
-            width: 0%;
-            transition: width 0.1s;
-        }
+/* ============================================================
+   STATS
+   ============================================================ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px}
+.stat{
+  padding:20px 22px;border:1px solid var(--border);border-radius:12px;
+  background:var(--surface);transition:.22s;
+}
+.stat:hover{border-color:var(--border-strong);transform:translateY(-2px)}
+.stat-n{font-size:1.85rem;font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:3px}
+.stat-l{font-size:12.5px;color:var(--ink-3);letter-spacing:.02em}
 
-        /* Custom Cursor Glow */
-        #cursor-glow {
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: screen;
-            transition: transform 0.1s ease;
-            display: none; /* Hidden on mobile */
-        }
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+section{padding:88px 0;position:relative}
+.sec-head{margin-bottom:44px;max-width:680px}
+.sec-tag{
+  font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:9px;
+}
+.sec-tag::before{content:'';width:20px;height:1px;background:var(--accent);opacity:.6}
+.sec-head h2{font-size:clamp(1.7rem,3.6vw,2.35rem);font-weight:700;letter-spacing:-.03em;margin-bottom:14px}
+.sec-head p{color:var(--ink-2);font-size:1.02rem}
 
-        @media (min-width: 1024px) {
-            #cursor-glow {
-                display: block;
-            }
-        }
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.about{display:grid;grid-template-columns:1.35fr .9fr;gap:52px;align-items:start}
+.about-body p{color:var(--ink-2);margin-bottom:18px}
+.about-body p:last-child{margin-bottom:0}
+.about-body strong{color:var(--ink);font-weight:600}
+.about-card{
+  border:1px solid var(--border);border-radius:14px;background:var(--surface);
+  padding:24px;box-shadow:var(--shadow);
+}
+.about-card h4{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:16px;font-weight:600}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.kv:last-child{border-bottom:0;padding-bottom:0}
+.kv dt{color:var(--ink-3)}
+.kv dd{margin:0;color:var(--ink);font-weight:500;text-align:right}
 
-        /* Glassmorphism */
-        .glass {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        /* 3D Tilt Card Base Styles */
-        .glass-card {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.3s ease; /* Fast transform for tilt */
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
+/* ============================================================
+   PIPELINE — the showpiece
+   ============================================================ */
+.pipe-shell{
+  border:1px solid var(--border);border-radius:16px;background:var(--surface);
+  overflow:hidden;box-shadow:var(--shadow);
+}
+.pipe-bar{
+  display:flex;align-items:center;gap:9px;padding:13px 18px;
+  border-bottom:1px solid var(--border);background:var(--surface-2);
+}
+.tl{width:11px;height:11px;border-radius:50%;background:var(--border-strong)}
+.pipe-title{margin-left:8px;font-size:12.5px;color:var(--ink-3);letter-spacing:.02em}
+.pipe-body{padding:30px 24px}
+.pipe-hint{font-size:12.5px;color:var(--ink-3);margin-bottom:20px;display:flex;align-items:center;gap:7px}
+.flow{
+  display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:10px;
+  scrollbar-width:thin;
+}
+.stage{
+  flex:1 1 0;min-width:126px;background:transparent;border:1px solid var(--border);
+  border-radius:11px;padding:15px 13px;cursor:pointer;text-align:left;
+  font-family:inherit;color:inherit;transition:.2s;position:relative;
+}
+.stage:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.stage[aria-selected="true"]{
+  border-color:var(--st,var(--accent));background:var(--surface-2);
+  box-shadow:0 0 0 1px var(--st,var(--accent)),0 6px 20px rgba(0,0,0,.18);
+}
+.stage-i{
+  width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--st,var(--accent)) 16%,transparent);
+  color:var(--st,var(--accent));margin-bottom:11px;
+}
+.stage-n{font-size:13.5px;font-weight:600;margin-bottom:3px;letter-spacing:-.01em}
+.stage-s{font-size:11.5px;color:var(--ink-3);line-height:1.45}
+.arrow{
+  flex:0 0 26px;display:grid;place-items:center;color:var(--ink-3);opacity:.55;
+}
+.arrow svg{width:15px;height:15px}
+.detail{
+  margin-top:22px;padding:22px;border-radius:12px;background:var(--surface-2);
+  border:1px solid var(--border);border-left:3px solid var(--st,var(--accent));
+}
+.detail-h{display:flex;align-items:center;gap:11px;margin-bottom:12px;flex-wrap:wrap}
+.detail-h h4{font-size:1.06rem;letter-spacing:-.01em}
+.layer-tag{
+  font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:5px;
+  background:color-mix(in srgb,var(--st,var(--accent)) 16%,transparent);color:var(--st,var(--accent));
+}
+.detail p{color:var(--ink-2);font-size:14.5px;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  font-size:11.5px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);
+  background:var(--surface);color:var(--ink-2);
+}
 
-        .glass-card:hover {
-            border-color: rgba(14, 165, 233, 0.5);
-            box-shadow: 0 0 30px -5px rgba(14, 165, 233, 0.2);
-        }
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+.tline{position:relative;padding-left:30px}
+.tline::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--border)}
+.job{position:relative;padding-bottom:44px}
+.job:last-child{padding-bottom:0}
+.job::before{
+  content:'';position:absolute;left:-27px;top:7px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--border-strong);
+}
+.job.now::before{border-color:var(--accent);box-shadow:0 0 0 4px var(--glow)}
+.job-h{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:baseline;margin-bottom:5px}
+.job-t{font-size:1.14rem;font-weight:600;letter-spacing:-.015em}
+.job-d{font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+.job-c{font-size:14.5px;color:var(--accent);font-weight:500;margin-bottom:4px}
+.job-loc{font-size:12.5px;color:var(--ink-3);margin-bottom:15px}
+.job ul{margin:0;padding-left:19px;color:var(--ink-2);font-size:14.5px}
+.job li{margin-bottom:9px}
+.job li::marker{color:var(--ink-3)}
+.job li strong{color:var(--ink);font-weight:600}
+.job .chips{margin-top:15px}
 
-        /* Inner content lift on hover for 3D effect */
-        .glass-card > * {
-            transform: translateZ(20px); /* Lifts content off card */
-            pointer-events: none; /* Allows click through to card if needed, but usually safe to remove if interactive elements inside */
-        }
-        
-        .glass-card a, .glass-card button {
-            pointer-events: auto; /* Re-enable pointer events for links/buttons inside cards */
-            transform: translateZ(30px);
-        }
+/* ============================================================
+   SKILLS
+   ============================================================ */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px}
+.skill-g{border:1px solid var(--border);border-radius:13px;padding:22px;background:var(--surface);transition:.22s}
+.skill-g:hover{border-color:var(--border-strong)}
+.skill-g h4{
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  margin-bottom:15px;font-weight:600;display:flex;align-items:center;gap:8px;
+}
+.skill-g h4 span{color:var(--accent)}
+.skill-l{display:flex;flex-wrap:wrap;gap:7px}
+.skill-l .chip{background:var(--surface-2)}
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #0ea5e9;
-        }
+/* ============================================================
+   CERTS + EDU
+   ============================================================ */
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start}
+.cert{
+  display:flex;gap:14px;padding:17px;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface);margin-bottom:11px;transition:.2s;
+}
+.cert:hover{border-color:var(--border-strong);transform:translateX(2px)}
+.cert-i{
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;display:grid;place-items:center;
+  background:var(--surface-3);color:var(--accent);
+}
+.cert-n{font-size:14.5px;font-weight:600;margin-bottom:2px;letter-spacing:-.01em}
+.cert-o{font-size:12.5px;color:var(--ink-3)}
 
-        /* Timeline Connector */
-        .timeline-line::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 20px; /* Mobile position */
-            width: 2px;
-            background: linear-gradient(to bottom, #0ea5e9, #6366f1);
-            z-index: 0;
-        }
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact{
+  border:1px solid var(--border);border-radius:18px;padding:56px 44px;text-align:center;
+  background:
+    radial-gradient(ellipse 60% 100% at 50% 0%,var(--glow),transparent 70%),
+    var(--surface);
+  box-shadow:var(--shadow);
+}
+.contact h2{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:700;letter-spacing:-.03em;margin-bottom:14px}
+.contact p{color:var(--ink-2);max-width:520px;margin:0 auto 30px}
+.contact-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
-        @media (min-width: 768px) {
-            .timeline-line::before {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
+footer{border-top:1px solid var(--border);padding:30px 0;margin-top:80px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--ink-3)}
+.foot-links{display:flex;gap:18px}
+.foot-links a:hover{color:var(--accent)}
 
-        /* Gradient Text */
-        .text-gradient {
-            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
-            background-size: 200% auto;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-            animation: gradient-flow 5s linear infinite;
-        }
+/* ============================================================
+   REVEAL
+   ============================================================ */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.2,.7,.3,1),transform .6s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
 
-        @keyframes gradient-flow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Typing Cursor */
-        .typing-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1em;
-            background-color: #0ea5e9;
-            margin-left: 2px;
-            animation: blink 1s infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Hero Canvas */
-        #canvas-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.6;
-        }
-        
-        .section-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-        
-        .section-reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:900px){
+  .about,.two{grid-template-columns:1fr;gap:32px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+  .nav-links{
+    position:fixed;top:64px;left:0;right:0;flex-direction:column;align-items:stretch;
+    background:var(--surface);border-bottom:1px solid var(--border);padding:10px 4vw 16px;
+    gap:2px;display:none;box-shadow:var(--shadow);
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:11px 12px;font-size:15px}
+  .nav-toggle{display:grid}
+  .nav .btn-primary{display:none}
+  .hero{padding:118px 0 66px}
+  section{padding:64px 0}
+  .contact{padding:40px 24px}
+  .pipe-body{padding:22px 16px}
+  .flow{gap:0}
+  .stage{min-width:150px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+}
+</style>
 </head>
-<body class="antialiased selection:bg-primary selection:text-white">
+<body>
 
-    <!-- Scroll Progress -->
-    <div id="scroll-progress"></div>
-    
-    <!-- Cursor Glow -->
-    <div id="cursor-glow"></div>
+<!-- ===================== NAV ===================== -->
+<nav class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="brand"><span class="brand-mark">RV</span> Rama Bhargavi Vempolu</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#about">About</a>
+      <a href="#platform">Platform</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#credentials">Credentials</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle colour theme" title="Toggle theme">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" id="themeIcon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="#contact" class="btn btn-primary">Get in touch</a>
+      <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass border-b border-white/5 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0 cursor-pointer group" onclick="window.scrollTo(0,0)">
-                    <span class="text-2xl font-bold font-mono text-white tracking-tighter group-hover:text-primary transition-colors duration-300">
-                        RV<span class="text-primary group-hover:text-white transition-colors duration-300">.</span>
-                    </span>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#home" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="#about" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">About</a>
-                        <a href="#experience" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Experience</a>
-                        <a href="#skills" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Skills</a>
-                        <a href="#projects" class="hover:text-primary hover:bg-white/5 transition-all px-3 py-2 rounded-md text-sm font-medium">Projects</a>
-                        <a href="#contact" class="px-5 py-2 rounded-full bg-primary hover:bg-sky-600 text-white transition-all text-sm font-medium shadow-lg shadow-primary/25 hover:shadow-primary/50 hover:-translate-y-0.5 transform">Contact Me</a>
-                    </div>
-                </div>
-                <div class="-mr-2 flex md:hidden">
-                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="top">
+  <div class="hero-bg"><div class="hero-grid"></div><div class="hero-orb"></div></div>
+  <div class="wrap hero-in">
+    <div class="badge"><span class="dot"></span> Open to Senior Data Engineer roles</div>
+    <h1>Rama Bhargavi Vempolu</h1>
+    <p class="hero-role mono">Senior Data Engineer &nbsp;·&nbsp; Databricks · Snowflake · Azure · AWS</p>
+    <p class="hero-pitch">
+      I build the data platforms that let analytics and ML teams move fast without breaking things —
+      most recently a <strong>governed lakehouse for a mortgage servicer</strong>, running under NPI
+      controls strict enough to survive an audit.
+    </p>
+    <div class="hero-cta">
+      <a href="#platform" class="btn btn-primary">
+        See the architecture
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/ramab1520" target="_blank" rel="noopener" class="btn btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.07 1.4-2.07 2.85V21H9z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+    <div class="hero-meta">
+      <span>📍 New York City Metropolitan Area</span>
+      <span>🎓 MS Computer Science, University of Dayton</span>
+      <span>🗣 English · Telugu</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">5+</div><div class="stat-l">Years in data engineering</div></div>
+      <div class="stat"><div class="stat-n">3</div><div class="stat-l">Regulated industries</div></div>
+      <div class="stat"><div class="stat-n">70%</div><div class="stat-l">Audit prep time removed</div></div>
+      <div class="stat"><div class="stat-n">40%</div><div class="stat-l">Pipeline throughput gain</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head rv"><div class="sec-tag">About</div><h2>The hard part is rarely the pipeline</h2></div>
+    <div class="about rv">
+      <div class="about-body">
+        <p>Five years across <strong>financial services, insurance, and consulting</strong> has taught me that the difficult part of data engineering is almost never moving the data. It's the schema that drifts at 2am, the lineage nobody can trace, and the governance layer that gets bolted on after the fact.</p>
+        <p>So I build for those first. Sensitive columns get dropped at an architectural boundary rather than filtered downstream. Schema changes from vendor feeds surface at ingestion rather than as a broken dashboard three days later. Lineage and access control live in one catalog instead of three spreadsheets.</p>
+        <p>My day-to-day is <strong>PySpark, SQL, and Python</strong> across Azure and AWS — Synapse and Airflow for orchestration, Databricks and Delta Lake for transformation, Unity Catalog for governance, and Power BI at the reporting layer. I care most about the part where a platform decision quietly removes an entire category of future problem.</p>
+      </div>
+      <aside class="about-card">
+        <h4>At a glance</h4>
+        <dl>
+          <div class="kv"><dt>Current</dt><dd>Senior Data Engineer<br>Cenlar FSB</dd></div>
+          <div class="kv"><dt>Based in</dt><dd>NYC Metro Area</dd></div>
+          <div class="kv"><dt>Focus</dt><dd>Lakehouse · Governance</dd></div>
+          <div class="kv"><dt>Clouds</dt><dd>Azure · AWS</dd></div>
+          <div class="kv"><dt>Status</dt><dd>Open to opportunities</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PLATFORM ===================== -->
+<section id="platform">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-tag">Featured work</div>
+      <h2>Enterprise mortgage servicing lakehouse</h2>
+      <p>Daily feeds from multiple upstream servicing, contact-center, and document-management platforms, consolidated into governed analytics-ready datasets on Azure and Databricks.</p>
+    </div>
+
+    <div class="pipe-shell rv">
+      <div class="pipe-bar">
+        <span class="tl"></span><span class="tl"></span><span class="tl"></span>
+        <span class="pipe-title mono">medallion-architecture — bronze → silver → gold</span>
+      </div>
+      <div class="pipe-body">
+        <p class="pipe-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Select a stage to see what happens there
+        </p>
+
+        <div class="flow" role="tablist" aria-label="Pipeline stages" id="flow"></div>
+
+        <div class="detail" id="detail" role="tabpanel"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EXPERIENCE ===================== -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head rv"><div class="sec-tag">Experience</div><h2>Where I've built</h2></div>
+    <div class="tline rv">
+
+      <article class="job now">
+        <div class="job-h"><h3 class="job-t">Senior Data Engineer</h3><span class="job-d mono">Apr 2025 — Present</span></div>
+        <div class="job-c">Cenlar FSB</div>
+        <div class="job-loc">Pennsylvania, United States</div>
+        <ul>
+          <li>Built the <strong>multi-source ingestion layer</strong> consolidating daily feeds from upstream servicing, contact-center, and document-management systems — Synapse pipelines pull vendor files from a secured SFTP landing zone into Azure Blob Storage with per-source delivery validation.</li>
+          <li>Architected the <strong>Bronze/Silver/Gold Medallion lakehouse</strong> end to end: immutable raw landing, PySpark transformations in staging, and curated Delta Lake tables registered in Unity Catalog.</li>
+          <li>Made <strong>NPI removal a structural guarantee</strong> rather than a downstream cleanup step — sensitive columns are dropped at the Bronze-to-staging boundary and enforced through column-level access controls, so no non-public information reaches any analyst-facing table.</li>
+          <li>Implemented <strong>SCD Type 2</strong> and append merge patterns in Silver using Delta Lake <span class="mono">MERGE INTO</span>, giving the business point-in-time history instead of a snapshot that overwrites itself nightly.</li>
+          <li>Automated <strong>schema drift detection</strong> and versioning in Unity Catalog — upstream vendor schema changes surface at ingestion rather than as a broken dashboard.</li>
+          <li>Built the end-to-end <strong>data quality framework</strong>: validation rules, anomaly detection, SLA monitoring, and automated remediation, with alerting through Azure Monitor and Databricks alerts.</li>
+          <li>Automated multi-environment deployment through Azure DevOps CI/CD and Databricks Asset Bundles, replacing a manual migration checklist.</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">Azure Synapse</span><span class="chip">Databricks</span><span class="chip">PySpark</span>
+          <span class="chip">Delta Lake</span><span class="chip">Unity Catalog</span><span class="chip">SCD Type 2</span>
+          <span class="chip">Azure DevOps</span><span class="chip">Power BI</span>
         </div>
+      </article>
 
-        <!-- Mobile Menu -->
-        <div class="hidden md:hidden glass" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-700">
-                <a href="#home" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="#experience" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Experience</a>
-                <a href="#skills" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Skills</a>
-                <a href="#projects" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
-                <a href="#contact" class="text-primary block px-3 py-2 rounded-md text-base font-medium">Contact Me</a>
-            </div>
+      <article class="job">
+        <div class="job-h"><h3 class="job-t">Data Engineer</h3><span class="job-d mono">May 2024 — Apr 2025</span></div>
+        <div class="job-c">American Family Insurance</div>
+        <div class="job-loc">United States</div>
+        <ul>
+          <li>Cut <strong>audit preparation time by 70%</strong> by implementing Unity Catalog as the central governance layer — one source of truth for lineage, access, and classification.</li>
+          <li>Designed and optimised graph schemas across Neo4j, TigerGraph, and ArangoDB to model complex policy and claims relationships, <strong>reducing query execution time by 40%</strong> on the heaviest traversals.</li>
+          <li>Built real-time ingestion on Apache Kafka, closing the gap between event and insight for operational reporting.</li>
+          <li>Delivered scalable ETL into the data lake using Databricks and Airflow to support real-time analytics.</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">Databricks</span><span class="chip">Unity Catalog</span><span class="chip">Neo4j</span>
+          <span class="chip">TigerGraph</span><span class="chip">Kafka</span><span class="chip">Airflow</span>
         </div>
-    </nav>
+      </article>
 
-    <!-- Hero Section -->
-    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        <!-- Background Canvas -->
-        <canvas id="canvas-container"></canvas>
-        
-        <!-- Background Blobs -->
-        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div class="absolute top-0 -right-4 w-72 h-72 bg-sky-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
-            <!-- Animated Badge -->
-            <div class="inline-block px-4 py-1.5 mb-6 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-300 text-sm font-mono animate-float shadow-[0_0_15px_rgba(14,165,233,0.3)]">
-                <i class="fas fa-terminal mr-2"></i> 
-                <span id="typewriter-text"></span><span class="typing-cursor"></span>
-            </div>
-            
-            <h1 class="text-5xl md:text-8xl font-bold tracking-tight mb-6">
-                Hello, I'm <br class="md:hidden" /> <span class="text-gradient">Rama Bhargavi</span>
-            </h1>
-            
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400 leading-relaxed">
-                Architecting scalable data pipelines and transforming complex datasets into actionable business insights using Azure, Databricks, and Modern Data Stack.
-            </p>
-            
-            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#contact" class="px-8 py-3.5 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-semibold shadow-lg shadow-sky-500/30 transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95">
-                    Get in Touch
-                </a>
-                <a href="#experience" class="px-8 py-3.5 rounded-lg glass hover:bg-white/10 text-white font-semibold border border-white/10 transition-all hover:-translate-y-1">
-                    View Experience
-                </a>
-            </div>
-
-            <!-- Tech Stack Ticker -->
-            <div class="mt-20 pt-8 border-t border-white/5">
-                <p class="text-sm text-gray-500 mb-6 font-mono uppercase tracking-widest">Powering Solutions With</p>
-                <div class="flex justify-center flex-wrap gap-10 opacity-70">
-                    <i class="fab fa-aws text-4xl hover:text-[#FF9900] hover:scale-110 transition-all duration-300 cursor-pointer" title="AWS"></i>
-                    <i class="fab fa-microsoft text-4xl hover:text-[#00A4EF] hover:scale-110 transition-all duration-300 cursor-pointer" title="Azure"></i>
-                    <i class="fab fa-google text-4xl hover:text-[#4285F4] hover:scale-110 transition-all duration-300 cursor-pointer" title="GCP"></i>
-                    <i class="fab fa-python text-4xl hover:text-[#3776AB] hover:scale-110 transition-all duration-300 cursor-pointer" title="Python"></i>
-                    <i class="fas fa-database text-4xl hover:text-[#336791] hover:scale-110 transition-all duration-300 cursor-pointer" title="SQL"></i>
-                    <i class="fas fa-snowflake text-4xl hover:text-[#29B5E8] hover:scale-110 transition-all duration-300 cursor-pointer" title="Snowflake"></i>
-                </div>
-            </div>
+      <article class="job">
+        <div class="job-h"><h3 class="job-t">Data Engineer</h3><span class="job-d mono">Aug 2021 — Jul 2022</span></div>
+        <div class="job-c">Cognizant</div>
+        <div class="job-loc">Pune, Maharashtra, India</div>
+        <ul>
+          <li><strong>Reduced data errors by 15%</strong> across client-facing ETL by rebuilding pipelines on Amazon Redshift, AWS Glue, and Apache Airflow with validation at each stage.</li>
+          <li>Built PySpark transformation pipelines supporting large-scale client analytics workloads.</li>
+          <li>Designed Neo4j and TigerGraph schemas that turned multi-hop relationship questions from overnight batch jobs into interactive queries.</li>
+          <li>Cut dashboard load times by 40% in Power BI and Tableau, turning reports executives had stopped opening into ones used in weekly reviews.</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">AWS Redshift</span><span class="chip">AWS Glue</span><span class="chip">Airflow</span>
+          <span class="chip">PySpark</span><span class="chip">Neo4j</span><span class="chip">Tableau</span>
         </div>
-    </section>
+      </article>
 
-    <!-- About Section -->
-    <section id="about" class="py-24 bg-darker relative section-reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="relative group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-2xl blur-xl opacity-30 transform -rotate-3 group-hover:opacity-50 transition-opacity duration-500"></div>
-                    <div class="relative glass-card rounded-2xl p-8 border border-white/10">
-                        <h3 class="text-2xl font-bold mb-4 text-white">Professional Summary</h3>
-                        <div class="space-y-4 text-gray-400">
-                            <p>
-                                Data Engineer with <strong class="text-white">5+ years of experience</strong> across business consulting, insurance, and financial services domains. I specialize in building and optimizing scalable data pipelines using SQL, Python, and cloud platforms.
-                            </p>
-                            <p>
-                                My expertise lies in the <strong class="text-white">Medallion Architecture</strong>, Data Warehousing, and automating ETL processes to drive business intelligence. I am also a skilled orator with project management experience, bridging the gap between technical data solutions and business goals.
-                            </p>
-                            <div class="grid grid-cols-2 gap-4 mt-6">
-                                <div class="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-primary/50 transition-colors">
-                                    <div class="text-3xl font-bold text-primary mb-1">5+</div>
-                                    <div class="text-sm text-gray-500">Years Experience</div>
-                                </div>
-                                <div class="p-4 rounded-lg bg-white/5 border border-white/5 hover:border-secondary/50 transition-colors">
-                                    <div class="text-3xl font-bold text-secondary mb-1">MS</div>
-                                    <div class="text-sm text-gray-500">Computer Science</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="space-y-6">
-                    <h2 class="text-3xl md:text-4xl font-bold">
-                        <span class="text-gradient">Education & Credentials</span>
-                    </h2>
-                    
-                    <!-- Education Cards -->
-                    <div class="glass-card p-6 rounded-xl flex items-start space-x-4 hover:border-sky-500/50">
-                        <div class="p-3 rounded-lg bg-sky-500/20 text-sky-400">
-                            <i class="fas fa-graduation-cap text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-semibold text-white">Master of Computer Science</h4>
-                            <p class="text-primary">University of Dayton, OH</p>
-                            <p class="text-sm text-gray-500">Aug 2022 - May 2024</p>
-                        </div>
-                    </div>
-
-                    <div class="glass-card p-6 rounded-xl flex items-start space-x-4 hover:border-indigo-500/50">
-                        <div class="p-3 rounded-lg bg-indigo-500/20 text-indigo-400">
-                            <i class="fas fa-university text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-semibold text-white">B.Tech in Computer Science</h4>
-                            <p class="text-primary">Gayatri Vidya Parishad College, India</p>
-                            <p class="text-sm text-gray-500">Jun 2017 - Sep 2021</p>
-                        </div>
-                    </div>
-
-                    <!-- Certifications Summary -->
-                    <div class="flex flex-wrap gap-3 mt-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-sky-500/30 text-sky-300 bg-sky-500/10 cursor-default hover:bg-sky-500/20 transition-colors">AWS Certified</span>
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-blue-500/30 text-blue-300 bg-blue-500/10 cursor-default hover:bg-blue-500/20 transition-colors">Azure Data Fundamentals</span>
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-orange-500/30 text-orange-300 bg-orange-500/10 cursor-default hover:bg-orange-500/20 transition-colors">Databricks Lakehouse</span>
-                        <span class="px-3 py-1 rounded-full text-xs font-mono border border-teal-500/30 text-teal-300 bg-teal-500/10 cursor-default hover:bg-teal-500/20 transition-colors">Snowflake Advanced</span>
-                    </div>
-                </div>
-            </div>
+      <article class="job">
+        <div class="job-h"><h3 class="job-t">Junior Data Engineer</h3><span class="job-d mono">Jul 2019 — Apr 2021</span></div>
+        <div class="job-c">CGI</div>
+        <div class="job-loc">India</div>
+        <ul>
+          <li>Automated data transformations in PySpark, <strong>cutting processing time by 40%</strong> on the team's heaviest recurring jobs.</li>
+          <li>Integrated Apache Kafka with Apache Spark for real-time processing, improving ingestion efficiency by 35%.</li>
+          <li><strong>Reclaimed 5 hours per week</strong> of manual work by moving recurring workflows onto Airflow, and hardened data access with Snowflake RBAC.</li>
+          <li>Optimised Cypher queries and Neo4j schemas to support relationship-driven analytics.</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">PySpark</span><span class="chip">Kafka</span><span class="chip">Airflow</span>
+          <span class="chip">Snowflake</span><span class="chip">Neo4j</span><span class="chip">Cypher</span>
         </div>
-    </section>
+      </article>
 
-    <!-- Experience Section -->
-    <section id="experience" class="py-24 bg-dark relative section-reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Work Experience</h2>
-                <div class="w-24 h-1 bg-gradient-to-r from-sky-500 to-indigo-500 mx-auto rounded-full"></div>
-            </div>
+    </div>
+  </div>
+</section>
 
-            <div class="relative timeline-line">
-                <!-- Job 1 -->
-                <div class="relative z-10 mb-12 md:w-1/2 md:ml-auto md:pl-10 pl-12 group">
-                    <div class="absolute left-0 md:-left-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-primary shadow-[0_0_15px_rgba(14,165,233,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <i class="fas fa-building text-6xl"></i>
-                        </div>
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-primary/20 text-primary mb-3 font-mono">April 2025 - Present</span>
-                        <h3 class="text-xl font-bold text-white">Senior Data Engineer</h3>
-                        <h4 class="text-lg text-gray-300 mb-2">Cenlar | Yardley, PA</h4>
-                        <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside">
-                            <li>Led migration from SQL Server to Azure Data Lake (Medallion Architecture).</li>
-                            <li>Engineered Bronze-Silver-Gold layers using Databricks (PySpark) and Unity Catalog.</li>
-                            <li>Implemented SCD Type 2 logic for historical tracking in Silver layer.</li>
-                            <li>Applied strict Governance (PII masking) and CI/CD automation.</li>
-                        </ul>
-                    </div>
-                </div>
+<!-- ===================== SKILLS ===================== -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head rv"><div class="sec-tag">Toolkit</div><h2>What I work with</h2></div>
+    <div class="skills rv" id="skills-grid"></div>
+  </div>
+</section>
 
-                <!-- Job 2 -->
-                <div class="relative z-10 mb-12 md:w-1/2 md:mr-auto md:pr-10 md:text-right pl-12 md:pl-0 group">
-                    <div class="absolute left-0 md:left-auto md:-right-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-secondary shadow-[0_0_15px_rgba(99,102,241,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
-                        <div class="absolute top-0 left-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform -scale-x-100">
-                            <i class="fas fa-car text-6xl"></i>
-                        </div>
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-secondary/20 text-secondary mb-3 font-mono">May 2024 - April 2025</span>
-                        <h3 class="text-xl font-bold text-white">Data Engineer</h3>
-                        <h4 class="text-lg text-gray-300 mb-2">American Family Insurance | New York, NY</h4>
-                        <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside inline-block text-left md:text-right">
-                            <li>Optimized ETL pipelines using Databricks, SSIS, and ADF.</li>
-                            <li>Reduced report load times by 40% through Power BI optimization.</li>
-                            <li>Implemented Lakehouse Architecture and Real-time streaming with Fabric.</li>
-                            <li>Enhanced governance with Unity Catalog across 5 business units.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Job 3 -->
-                <div class="relative z-10 mb-12 md:w-1/2 md:ml-auto md:pl-10 pl-12 group">
-                    <div class="absolute left-0 md:-left-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-indigo-400 shadow-[0_0_15px_rgba(129,140,248,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-indigo-400/20 text-indigo-300 mb-3 font-mono">Aug 2021 - Jul 2022</span>
-                        <h3 class="text-xl font-bold text-white">Programmer Analyst</h3>
-                        <h4 class="text-lg text-gray-300 mb-2">Cognizant | Pune, MH</h4>
-                        <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside">
-                            <li>Automated 10+ data source workflows using Airflow and Databricks.</li>
-                            <li>Reduced manual effort by 40% and processing time by 15%.</li>
-                            <li>Leveraged Snowflake Time Travel and Snowpipe for ingestion.</li>
-                            <li>Developed real-time dashboards in Power BI.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Job 4 -->
-                <div class="relative z-10 mb-12 md:w-1/2 md:mr-auto md:pr-10 md:text-right pl-12 md:pl-0 group">
-                    <div class="absolute left-0 md:left-auto md:-right-3 top-0 w-6 h-6 rounded-full bg-dark border-4 border-sky-600 shadow-[0_0_15px_rgba(2,132,199,0.5)] transform translate-y-2 group-hover:scale-125 transition-transform duration-300"></div>
-                    <div class="glass-card p-6 rounded-xl relative overflow-hidden">
-                        <span class="inline-block px-3 py-1 rounded-full text-xs bg-sky-600/20 text-sky-400 mb-3 font-mono">Jul 2019 - Apr 2021</span>
-                        <h3 class="text-xl font-bold text-white">Data Engineer</h3>
-                        <h4 class="text-lg text-gray-300 mb-2">Remote | India</h4>
-                        <ul class="space-y-2 text-sm text-gray-400 list-disc list-inside inline-block text-left md:text-right">
-                            <li>Migrated on-prem SQL Server to Azure Data Lake.</li>
-                            <li>Built ETL pipelines processing 1TB+ healthcare datasets.</li>
-                            <li>Integrated Kafka + Spark for real-time patient monitoring.</li>
-                            <li>Implemented RBAC in Snowflake for secure data access.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+<!-- ===================== CREDENTIALS ===================== -->
+<section id="credentials">
+  <div class="wrap">
+    <div class="sec-head rv"><div class="sec-tag">Credentials</div><h2>Certifications &amp; education</h2></div>
+    <div class="two rv">
+      <div>
+        <div class="cert">
+          <div class="cert-i"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg></div>
+          <div><div class="cert-n">AWS Certified Cloud Practitioner</div><div class="cert-o">Amazon Web Services</div></div>
         </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="py-24 bg-darker relative section-reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Technical Expertise</h2>
-                <p class="text-gray-400">A comprehensive toolkit for modern data engineering.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Skill Group 1 -->
-                <div class="glass-card p-6 rounded-xl hover:border-sky-500/50">
-                    <div class="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center text-sky-400 text-2xl mb-4 shadow-[0_0_10px_rgba(14,165,233,0.3)]">
-                        <i class="fas fa-cloud"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-4">Cloud Services</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Azure Synapse</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Azure Data Factory</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Data Lake Gen2</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">AWS (S3, Redshift)</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">GCP BigQuery</span>
-                    </div>
-                </div>
-
-                <!-- Skill Group 2 -->
-                <div class="glass-card p-6 rounded-xl hover:border-indigo-500/50">
-                    <div class="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center text-indigo-400 text-2xl mb-4 shadow-[0_0_10px_rgba(99,102,241,0.3)]">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-4">Languages & DB</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">SQL</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Python (PySpark)</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Scala</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Java</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Snowflake SQL</span>
-                    </div>
-                </div>
-
-                <!-- Skill Group 3 -->
-                <div class="glass-card p-6 rounded-xl hover:border-purple-500/50">
-                    <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-2xl mb-4 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-4">Tools & ETL</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Databricks</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Apache Airflow</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Kafka</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Terraform</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Docker</span>
-                    </div>
-                </div>
-
-                <!-- Skill Group 4 -->
-                <div class="glass-card p-6 rounded-xl hover:border-pink-500/50">
-                    <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center text-pink-400 text-2xl mb-4 shadow-[0_0_10px_rgba(236,72,153,0.3)]">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-4">Visualization</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Power BI</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Tableau</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Looker</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Matplotlib</span>
-                        <span class="px-2 py-1 bg-white/5 rounded text-xs text-gray-300 border border-white/5">Grafana</span>
-                    </div>
-                </div>
-            </div>
+        <div class="cert">
+          <div class="cert-i"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg></div>
+          <div><div class="cert-n">Advanced Snowflake: Deep Dive Cloud Data Warehousing &amp; Analytics</div><div class="cert-o">Snowflake</div></div>
         </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="py-24 bg-dark relative section-reveal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Featured Work</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Project 1 -->
-                <div class="glass-card rounded-xl overflow-hidden group hover:border-primary/50">
-                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i class="fas fa-network-wired text-6xl text-gray-700 group-hover:text-primary transition-colors z-10"></i>
-                    </div>
-                    <div class="p-8">
-                        <h3 class="text-2xl font-bold text-white mb-3">Azure End-to-End Pipeline</h3>
-                        <p class="text-gray-400 mb-4 text-sm">
-                            Designed and implemented a real-time data pipeline using Databricks and Synapse Analytics. 
-                            Enabled real-time insights into customer demographics and sales trends with a dynamic Power BI dashboard.
-                        </p>
-                        <div class="flex gap-2 mb-6">
-                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary border border-primary/20">Azure Data Factory</span>
-                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary border border-primary/20">RBAC</span>
-                            <span class="text-xs px-2 py-1 rounded bg-primary/20 text-primary border border-primary/20">Key Vault</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 2 (Publication) -->
-                <div class="glass-card rounded-xl overflow-hidden group hover:border-secondary/50">
-                    <div class="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i class="fas fa-book-journal-whills text-6xl text-gray-700 group-hover:text-secondary transition-colors z-10"></i>
-                    </div>
-                    <div class="p-8">
-                        <div class="flex justify-between items-start">
-                            <h3 class="text-2xl font-bold text-white mb-3">Publication: Planetary Dynamics</h3>
-                            <span class="bg-secondary/20 text-secondary text-xs px-2 py-1 rounded border border-secondary/20">Research</span>
-                        </div>
-                        <p class="text-gray-400 mb-4 text-sm">
-                            "A Planet Crossing the Fragment Chain of a Large Comet." Published in Earth & Environmental Science Research & Reviews.
-                             utilized Power BI, SQL, and Python to analyze planetary interactions and impact probabilities.
-                        </p>
-                        <div class="flex gap-2 mb-6">
-                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary border border-secondary/20">Python</span>
-                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary border border-secondary/20">Matplotlib</span>
-                            <span class="text-xs px-2 py-1 rounded bg-secondary/20 text-secondary border border-secondary/20">GSM Model</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="cert">
+          <div class="cert-i"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a4 4 0 0 1 4 4v1a4 4 0 0 1 0 8v1a4 4 0 0 1-8 0v-1a4 4 0 0 1 0-8V6a4 4 0 0 1 4-4z"/></svg></div>
+          <div><div class="cert-n">Oracle Cloud Infrastructure 2024 Certified AI Foundations Associate</div><div class="cert-o">Oracle</div></div>
         </div>
-    </section>
-
-    <!-- Certifications -->
-    <section class="py-16 bg-darker border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 class="text-xl text-center text-gray-400 mb-8 uppercase tracking-widest font-mono">Certified Professional</h3>
-            <div class="flex flex-wrap justify-center gap-6">
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-primary/50 transition-all hover:-translate-y-1">
-                    <i class="fab fa-aws text-orange-400 text-2xl"></i>
-                    <span class="text-sm font-medium">Cloud Practitioner</span>
-                </div>
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-blue-500/50 transition-all hover:-translate-y-1">
-                    <i class="fab fa-microsoft text-blue-400 text-2xl"></i>
-                    <span class="text-sm font-medium">Azure Data Fundamentals</span>
-                </div>
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-green-500/50 transition-all hover:-translate-y-1">
-                    <i class="fab fa-microsoft text-green-400 text-2xl"></i>
-                    <span class="text-sm font-medium">Fabric Analytics Engineer</span>
-                </div>
-                <div class="flex items-center space-x-3 bg-white/5 px-6 py-3 rounded-lg border border-white/10 hover:border-red-500/50 transition-all hover:-translate-y-1">
-                    <i class="fas fa-database text-red-400 text-2xl"></i>
-                    <span class="text-sm font-medium">Oracle AI Foundations</span>
-                </div>
-            </div>
+      </div>
+      <div>
+        <div class="about-card">
+          <h4>Education</h4>
+          <div style="margin-bottom:20px">
+            <div class="cert-n" style="font-size:15px">MS, Computer Science</div>
+            <div class="cert-o">University of Dayton · Aug 2022 – May 2024</div>
+          </div>
+          <h4 style="margin-top:24px">Publication</h4>
+          <div class="cert-o" style="line-height:1.55">“A Planet Crossing the Fragment Chain of a Large Comet” — research article applying observational data analysis and modelling.</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-24 bg-dark relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-80"></div>
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6">Let's Build Scalable Solutions</h2>
-            <p class="text-xl text-gray-400 mb-10">
-                Open to relocation for the right opportunity. Currently based in Philadelphia, PA.
-            </p>
-            
-            <div class="flex flex-col md:flex-row justify-center gap-6 mb-12">
-                <a href="mailto:ramabhargavi0@gmail.com" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left transition-all hover:-translate-y-1 hover:border-primary/50">
-                    <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-400">Email Me</p>
-                        <p class="text-lg font-bold text-white group-hover:text-primary transition-colors">bhargavivvs5@gmail.com</p>
-                    </div>
-                </a>
-                
-                <a href="tel:+15738013196" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left transition-all hover:-translate-y-1 hover:border-secondary/50">
-                    <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-400">Call Me</p>
-                        <p class="text-lg font-bold text-white group-hover:text-secondary transition-colors">(609)-850-8042</p>
-                    </div>
-                </a>
+<!-- ===================== CONTACT ===================== -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact rv">
+      <h2>Let's talk data platforms</h2>
+      <p>Open to Senior Data Engineer and Data Platform Engineer roles in the New York metro area or remote. Happy to talk lakehouse migrations, governance rollouts, or why schema drift detection should be automated.</p>
+      <div class="contact-cta">
+        <a href="mailto:bhargavivvs5@gmail.com" class="btn btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+          bhargavivvs5@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/ramab1520" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
+        <a href="https://github.com/ramabhargavivempolu" target="_blank" rel="noopener" class="btn btn-ghost">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-                <a href="https://www.linkedin.com/in/ramab1520" target="_blank" class="glass-card px-8 py-6 rounded-xl flex items-center space-x-4 hover:bg-white/5 group text-left transition-all hover:-translate-y-1 hover:border-blue-500/50">
-                    <div class="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
-                        <i class="fab fa-linkedin-in"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-400">Connect</p>
-                        <p class="text-lg font-bold text-white group-hover:text-blue-500 transition-colors">linkedin.com/in/ramab1520</p>
-                    </div>
-                </a>
-            </div>
+</main>
 
-            <p class="text-gray-600 text-sm">
-                &copy; 2025 Rama Bhargavi Vempolu. All rights reserved.
-            </p>
-        </div>
-    </section>
+<footer>
+  <div class="wrap foot">
+    <span>© <span id="yr"></span> Rama Bhargavi Vempolu</span>
+    <div class="foot-links">
+      <a href="#about">About</a><a href="#platform">Platform</a>
+      <a href="#experience">Experience</a><a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
 
-    <!-- JavaScript for Animations -->
-    <script>
-        // 1. Particle Background Animation
-        const canvas = document.getElementById('canvas-container');
-        const ctx = canvas.getContext('2d');
-        
-        let width, height;
-        let particles = [];
-        const particleCount = 60; // Number of nodes
-        const connectionDistance = 150; // Distance to draw lines
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const STAGES = [
+  { id:'src', name:'Source systems', sub:'Daily vendor feeds', color:'var(--ink-3)',
+    layer:'Upstream',
+    title:'Multiple upstream platforms',
+    body:'Servicing, contact-center, and document-management systems each deliver on their own schedule, in their own format, with their own schema. Every one of them carries non-public information. Before this platform, reconciling them was a manual step in front of every analytics request.',
+    tech:['SFTP','CSV / fixed-width','Per-source SLAs'] },
+  { id:'ing', name:'Ingestion', sub:'Synapse pipelines', color:'var(--accent)',
+    layer:'Orchestration',
+    title:'Synapse pipelines pull from the SFTP landing zone',
+    body:'Azure Synapse Analytics pipelines pull vendor files from a secured SFTP landing zone into Azure Blob Storage on a scheduled daily cadence. Each source has its own delivery validation, so a late or malformed feed is caught at the door rather than halfway through a transformation.',
+    tech:['Azure Synapse Analytics','Azure Blob Storage','Delivery validation','Scheduled triggers'] },
+  { id:'bronze', name:'Bronze', sub:'Raw immutable landing', color:'var(--bronze)',
+    layer:'Bronze',
+    title:'Raw lands immutably, exactly as delivered',
+    body:'Files land untouched in Blob Storage as the source-of-truth copy. Nothing is cleaned, renamed, or filtered here. That immutability is what makes replay possible — when a downstream bug is found six weeks later, the original data is still there to reprocess from.',
+    tech:['Azure Blob Storage','Immutable raw zone','Replay & audit trail'] },
+  { id:'npi', name:'NPI boundary', sub:'Sensitive columns dropped', color:'#E86A6A',
+    layer:'Control',
+    title:'The platform’s core guarantee',
+    body:'Non-public information columns are dropped in PySpark at the Bronze-to-staging transition, and enforced through Unity Catalog column-level access controls. This is deliberately structural rather than a downstream filter: because NPI never crosses this boundary, no Silver or Gold consumer can accidentally surface it — including ones written after I leave.',
+    tech:['PySpark','Unity Catalog','Column-level RBAC','Dynamic views / masking'] },
+  { id:'silver', name:'Silver', sub:'SCD2 merge → Delta', color:'var(--silver)',
+    layer:'Silver',
+    title:'Transformation, merge, and point-in-time history',
+    body:'Staging transformations run in PySpark on Databricks, then merge into Delta Lake tables registered in Unity Catalog. Dimensions needing history use SCD Type 2 via Delta MERGE INTO; event-style feeds append. The business can now ask what a loan record looked like in March, instead of only seeing whatever last night’s load overwrote.',
+    tech:['Databricks','PySpark','Delta Lake MERGE INTO','SCD Type 2','Unity Catalog'] },
+  { id:'gold', name:'Gold', sub:'Curated datasets', color:'var(--gold)',
+    layer:'Gold',
+    title:'Curated, business-facing datasets',
+    body:'Gold is modelled around reporting and analytics use cases rather than source-system structure — so an analyst asks a business question, not a question about which vendor file a field came from. These datasets replaced the per-request extracts analysts used to wait on.',
+    tech:['Delta Lake','Unity Catalog','Dimensional modelling','Power BI'] },
+  { id:'gov', name:'Governance', sub:'Cross-cutting', color:'var(--accent)',
+    layer:'Cross-cutting',
+    title:'Quality, lineage, and drift detection across all layers',
+    body:'Unity Catalog carries lineage, classification, and fine-grained RBAC across every layer. Schema drift from vendor feeds is detected automatically at ingestion. Validation rules, anomaly detection, SLA monitoring, and automated remediation run across the daily load, with alerting through Azure Monitor and Databricks alerts. Deployment across environments runs on Azure DevOps CI/CD with Databricks Asset Bundles.',
+    tech:['Unity Catalog','Schema drift detection','Azure Monitor','Azure DevOps','Databricks Asset Bundles'] }
+];
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
+const SKILLS = [
+  { icon:'◆', title:'Lakehouse & Processing', items:['Databricks','Apache Spark','PySpark','Spark SQL','Delta Lake','Spark Structured Streaming','Medallion Architecture','Scala'] },
+  { icon:'☁', title:'Cloud Platforms', items:['Microsoft Azure','Azure Synapse Analytics','Azure Blob Storage','Azure Data Factory','Azure Monitor','AWS','AWS Glue','Amazon Redshift','Amazon S3'] },
+  { icon:'⇄', title:'Orchestration & Streaming', items:['Apache Airflow','Apache Kafka','Synapse Pipelines','Real-time processing','Batch processing'] },
+  { icon:'▤', title:'Storage & Modelling', items:['Snowflake','SQL Server','Oracle','SCD Type 2','Dimensional Modelling','Data Warehousing','Source-to-Target Mapping','NoSQL'] },
+  { icon:'⚙', title:'Governance & Quality', items:['Unity Catalog','Data Lineage','NPPI / PII Handling','Data Masking','RBAC','Schema Drift Detection','Data Quality Frameworks','SLA Monitoring'] },
+  { icon:'◈', title:'Graph & Analytics', items:['Neo4j','TigerGraph','ArangoDB','Cypher','GSQL','Power BI','Tableau','Business Intelligence'] },
+  { icon:'⌘', title:'Languages & DevOps', items:['Python','SQL','Java','Azure DevOps','CI/CD','Git','Databricks Asset Bundles','Databricks CLI & REST APIs'] },
+  { icon:'▣', title:'Big Data Foundations', items:['Hadoop','HDFS','MapReduce','Hive','Data Mining','Data Analysis'] }
+];
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5; // Velocity X
-                this.vy = (Math.random() - 0.5) * 0.5; // Velocity Y
-                this.size = Math.random() * 2 + 1;
-            }
+/* ============================================================
+   PIPELINE
+   ============================================================ */
+const flow = document.getElementById('flow');
+const detail = document.getElementById('detail');
 
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
+const ARROW = `<div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>`;
 
-                // Bounce off edges
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
+STAGES.forEach((s, i) => {
+  if (i > 0) flow.insertAdjacentHTML('beforeend', ARROW);
+  const b = document.createElement('button');
+  b.className = 'stage';
+  b.setAttribute('role','tab');
+  b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+  b.style.setProperty('--st', s.color);
+  b.innerHTML = `
+    <div class="stage-i" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.66 3.58 3 8 3s8-1.34 8-3V6M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/>
+      </svg>
+    </div>
+    <div class="stage-n">${s.name}</div>
+    <div class="stage-s">${s.sub}</div>`;
+  b.addEventListener('click', () => select(i));
+  b.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const n = (i + (e.key === 'ArrowRight' ? 1 : -1) + STAGES.length) % STAGES.length;
+      select(n);
+      flow.querySelectorAll('.stage')[n].focus();
+    }
+  });
+  flow.appendChild(b);
+});
 
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(14, 165, 233, 0.5)'; // Primary color with opacity
-                ctx.fill();
-            }
-        }
+function select(i){
+  const s = STAGES[i];
+  flow.querySelectorAll('.stage').forEach((el, n) => el.setAttribute('aria-selected', n === i ? 'true' : 'false'));
+  detail.style.setProperty('--st', s.color);
+  detail.innerHTML = `
+    <div class="detail-h">
+      <h4>${s.title}</h4>
+      <span class="layer-tag">${s.layer}</span>
+    </div>
+    <p>${s.body}</p>
+    <div class="chips">${s.tech.map(t => `<span class="chip">${t}</span>`).join('')}</div>`;
+}
+select(0);
 
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-        }
+/* ============================================================
+   SKILLS
+   ============================================================ */
+document.getElementById('skills-grid').innerHTML = SKILLS.map(g => `
+  <div class="skill-g">
+    <h4><span>${g.icon}</span> ${g.title}</h4>
+    <div class="skill-l">${g.items.map(i => `<span class="chip">${i}</span>`).join('')}</div>
+  </div>`).join('');
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, width, height);
+/* ============================================================
+   THEME  (in-memory only — no browser storage)
+   ============================================================ */
+const root = document.documentElement;
+const themeIcon = document.getElementById('themeIcon');
+const MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+const SUN  = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
 
-            particles.forEach((p, index) => {
-                p.update();
-                p.draw();
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+  root.setAttribute('data-theme','light');
+  themeIcon.innerHTML = SUN;
+}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const light = root.getAttribute('data-theme') === 'light';
+  root.setAttribute('data-theme', light ? 'dark' : 'light');
+  themeIcon.innerHTML = light ? MOON : SUN;
+});
 
-                // Draw connections
-                for (let j = index + 1; j < particles.length; j++) {
-                    const p2 = particles[j];
-                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+/* ============================================================
+   NAV
+   ============================================================ */
+const nav = document.getElementById('nav');
+const navLinks = document.getElementById('navLinks');
+const navToggle = document.getElementById('navToggle');
 
-                    if (dist < connectionDistance) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(99, 102, 241, ${1 - dist / connectionDistance})`; // Fade based on distance
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                }
-            });
+navToggle.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', String(open));
+});
+navLinks.querySelectorAll('a').forEach(a =>
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded','false');
+  })
+);
 
-            requestAnimationFrame(animateParticles);
-        }
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive:true });
 
-        // 2. Typing Effect
-        const typingTextElement = document.getElementById('typewriter-text');
-        const roles = ["Senior Data Engineer", "Azure Architect", "ETL Specialist", "Cloud Developer"];
-        let roleIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        let typingDelay = 100;
-        let erasingDelay = 50;
-        let newTextDelay = 2000;
+/* active section highlight */
+const sections = [...document.querySelectorAll('section[id]')];
+const linkFor = id => navLinks.querySelector(`a[href="#${id}"]`);
+new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+      linkFor(e.target.id)?.classList.add('active');
+    }
+  });
+}, { rootMargin:'-45% 0px -50% 0px' }).observe ? sections.forEach(s => {
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+        linkFor(s.id)?.classList.add('active');
+      }
+    });
+  }, { rootMargin:'-45% 0px -50% 0px' }).observe(s);
+}) : null;
 
-        function type() {
-            const currentRole = roles[roleIndex];
-            
-            if (isDeleting) {
-                typingTextElement.textContent = currentRole.substring(0, charIndex - 1);
-                charIndex--;
-                typingDelay = erasingDelay;
-            } else {
-                typingTextElement.textContent = currentRole.substring(0, charIndex + 1);
-                charIndex++;
-                typingDelay = 100;
-            }
+/* ============================================================
+   REVEAL
+   ============================================================ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold:.08, rootMargin:'0px 0px -40px 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
-            if (!isDeleting && charIndex === currentRole.length) {
-                isDeleting = true;
-                typingDelay = newTextDelay;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                roleIndex++;
-                if (roleIndex >= roles.length) roleIndex = 0;
-            }
-
-            setTimeout(type, typingDelay);
-        }
-
-        // 3. 3D Tilt Effect
-        function initTilt() {
-            document.querySelectorAll('.glass-card').forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    
-                    // Max rotation in degrees
-                    const maxRotation = 10; 
-                    
-                    const rotateX = ((y - centerY) / centerY) * -maxRotation; 
-                    const rotateY = ((x - centerX) / centerX) * maxRotation;
-
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-                });
-
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-                });
-            });
-        }
-
-        // 4. Custom Cursor Follower
-        const cursorGlow = document.getElementById('cursor-glow');
-        if (cursorGlow) {
-            document.addEventListener('mousemove', (e) => {
-                // Use transform for better performance than top/left
-                cursorGlow.style.left = e.clientX + 'px';
-                cursorGlow.style.top = e.clientY + 'px';
-            });
-        }
-
-        // 5. Scroll Progress
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("scroll-progress").style.width = scrolled + "%";
-
-            // Navbar Effect
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('shadow-lg');
-                navbar.classList.replace('border-white/5', 'border-gray-800');
-                navbar.style.background = 'rgba(15, 23, 42, 0.9)';
-            } else {
-                navbar.classList.remove('shadow-lg');
-                navbar.classList.replace('border-gray-800', 'border-white/5');
-                navbar.style.background = 'rgba(30, 41, 59, 0.4)';
-            }
-        });
-
-        // 6. Section Reveal
-        const observerOptions = {
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.section-reveal').forEach(section => {
-            observer.observe(section);
-        });
-
-        // Initialize All
-        window.addEventListener('resize', () => {
-            resize();
-            initParticles();
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            resize();
-            initParticles();
-            animateParticles();
-            setTimeout(type, 1000); // Start typing after load
-            initTilt();
-        });
-
-    </script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
